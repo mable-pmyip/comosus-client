@@ -1,37 +1,48 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useApiClient } from '@common/contexts';
 import { useRouter } from 'next/router';
-import { AuthRoute } from '@src/constants/PageRoutes';
+import { useApiClient } from '@common/contexts';
+
 import { HStack, VStack } from '@chakra-ui/react';
 import { PageContainer, Logo } from '@src/common/components';
-import { ForgetPasswordForm } from '@src/modules/auth';
+import { ResetPasswordForm } from '@src/modules/auth';
+import { useResetPasswordMutation } from '@generated/graphql.queries';
+import { AuthRoute } from '@src/constants/PageRoutes';
 import { isNil } from 'lodash';
-import { useForgetPasswordMutation } from '@generated/graphql.queries';
 
 export default function ForgetPassword() {
   const { t } = useTranslation('auth');
-  const head = { title: t('forget-password.title') };
-  const router = useRouter();
-
   const { gqlClient } = useApiClient();
+  const router = useRouter();
+  const head = { title: t('reset-password.title') };
+
   const {
-    mutate: forgetPasswordSendEmail,
+    query: { resetToken },
+  } = router;
+  const token = resetToken as string;
+
+  const {
+    mutate: resetPassword,
     error,
-    isLoading: isSendingEmail,
-  } = useForgetPasswordMutation(gqlClient, {
+    isLoading: isResetingEmail,
+  } = useResetPasswordMutation(gqlClient, {
     onSettled: (data, error) => {
       if (error) {
-        // @ts-ignore
         console.error(error);
       }
       if (data) {
-        router.push(AuthRoute.forgetPasswordSuccess);
+        router.push(AuthRoute.Login);
       }
     },
   });
-  const onSubmit = (value: ForgetPasswordFormTypes) => {
-    forgetPasswordSendEmail({ email: value });
+
+  const onSubmit = (value: ResetPasswordFormTypes) => {
+    resetPassword({
+      detail: {
+        password: value.password,
+        resetToken: token,
+      },
+    });
   };
 
   return (
@@ -40,9 +51,9 @@ export default function ForgetPassword() {
         <HStack width="100%">
           <Logo height="5rem" />
         </HStack>
-        <ForgetPasswordForm
+        <ResetPasswordForm
           onSubmit={onSubmit}
-          isLoading={isSendingEmail}
+          isLoading={isResetingEmail}
           isInvalid={!isNil(error)}
         />
       </VStack>

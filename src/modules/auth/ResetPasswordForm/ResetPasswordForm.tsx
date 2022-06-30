@@ -3,41 +3,54 @@ import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+
 import { VStack, FormControl, Heading, Text } from '@chakra-ui/react';
 import { Button, FormErrorMessage, Input } from '@common/components';
 
-type ForgetPasswordFormProps = {
-  onSubmit: (values: ForgetPasswordFormTypes) => void;
+type ResetPasswordFormProps = {
+  onSubmit: (values: ResetPasswordFormTypes) => void;
   isLoading: boolean;
   isInvalid: boolean;
 };
-export default function ForgetPasswordForm({
+export default function ResetPasswordForm({
   onSubmit,
   isLoading,
   isInvalid,
-}: ForgetPasswordFormProps) {
+}: ResetPasswordFormProps) {
   const { t } = useTranslation('auth');
 
   const formValues = {
     inputs: [
       {
-        type: 'email',
-        name: 'email',
-        placeholder: t('forget-password.email.placeholder'),
+        type: 'password',
+        name: 'password',
+        placeholder: t('reset-password.form.password.placeholder'),
+      },
+      {
+        type: 'password',
+        name: 'confirmPassword',
+        placeholder: t('reset-password.form.confirm-password.placeholder'),
       },
     ],
     defaultValues: {
-      email: '',
+      password: '',
+      confirmPassword: '',
     },
     schema: yup.object({
-      email: yup
+      password: yup
         .string()
-        .email(t('forget-password.email.error.invalid-email'))
-        .required(t('forget-password.email.error.required')),
+        .required(t('reset-password.form.password.error.required')),
+      confirmPassword: yup
+        .string()
+        .required(t('reset-password.form.confirm-password.error.required'))
+        .oneOf(
+          [yup.ref('password'), null],
+          t('reset-password.form.confirm-password.error.match'),
+        ),
     }),
   };
 
-  const { handleSubmit, control } = useForm<ForgetPasswordFormTypes>({
+  const { handleSubmit, control } = useForm<ResetPasswordFormTypes>({
     defaultValues: formValues.defaultValues,
     resolver: yupResolver(formValues.schema),
     reValidateMode: 'onBlur',
@@ -48,12 +61,12 @@ export default function ForgetPasswordForm({
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl isInvalid={isInvalid}>
           <Heading as="h1" size="lg" fontWeight="500" mb={1}>
-            {t('forget-password.page.title')}
+            {t('reset-password.page.title')}
           </Heading>
-          <Text mb={10}>{t('forget-password.page.subtitle')}</Text>
-          <Text fontWeight="600" mb={2}>
-            {t('forget-password.email.label')}
-          </Text>
+          <Text mb={10}>{t('reset-password.page.subtitle')}</Text>
+          {/* <Text fontWeight="600" mb={2}>
+            {t('reset-password.form.password.label')}
+          </Text> */}
           <VStack align="stretch" gap="30px">
             {formValues.inputs.map(({ type, name, placeholder }, index) => (
               <Input
@@ -65,11 +78,11 @@ export default function ForgetPasswordForm({
               />
             ))}
             <FormErrorMessage
-              testId="forget-password.error"
-              error={t('forget-password.error')}
+              testId="reset-password.error"
+              error={t('reset-password.error')}
             />
             <Button type="submit" isLoading={isLoading}>
-              {t('forget-password.button')}
+              {t('reset-password.button')}
             </Button>
           </VStack>
         </FormControl>
