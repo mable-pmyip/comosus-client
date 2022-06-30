@@ -25,9 +25,21 @@ pipeline {
 		  }
 		}
 		
-		stage('Install and Build'){
+		stage('Install'){
 		  steps {
-		    sh 'yarn install && yarn codegen && yarn build'
+		    sh 'yarn install'
+		  }
+		}
+
+		stage('codegen'){
+		  steps {
+		    sh 'yarn codegen'
+		  }
+		}
+
+		stage('Build'){
+		  steps {
+		    sh 'yarn build'
 		  }
 		}
 
