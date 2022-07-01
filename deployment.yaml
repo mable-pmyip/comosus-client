@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: client-app-comosus-jenkins 
+  name: client-app-comosus
   labels:
     app: client-app-comosus
 spec:
