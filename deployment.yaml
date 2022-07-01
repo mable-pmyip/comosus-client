@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: client-comosus-jenkins 
+  name: client-app-comosus-jenkins 
   labels:
-    app: client-comosus
+    app: client-app-comosus
 spec:
   selector:
     matchLabels:
-        app: client-comosus
+        app: client-app-comosus
   replicas: 3
   strategy:
     type: RollingUpdate
   template:
     metadata:
       labels:
-        app: client-comosus
+        app: client-app-comosus
     spec:
       containers:
         - name: comosus-client
@@ -28,10 +28,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: client-comosus
+  name: client-app-comosus
 spec:
   selector:
-    app: client-comosus
+    app: client-app-comosus
   ports:
     - protocol: TCP
       port: 3000
