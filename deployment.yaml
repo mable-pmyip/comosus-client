@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: client-comosus
+  name: client-comosus-jenkins 
   labels:
     app: client-comosus
 spec:
@@ -23,3 +23,17 @@ spec:
             - containerPort: 3000
               protocol: TCP
           imagePullPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-comosus
+spec:
+  selector:
+    app: client-comosus
+  ports:
+    - protocol: TCP
+      port: 3100
+      targetPort: 3100
+  type: LoadBalancer
