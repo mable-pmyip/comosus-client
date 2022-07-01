@@ -8,7 +8,7 @@ pipeline {
 		appRegistry = "947036392937.dkr.ecr.us-east-1.amazonaws.com/comosus-client-img"
 		comosusClientRegistry = "https://947036392937.dkr.ecr.us-east-1.amazonaws.com"
 		cluster = "ComosusClient"
-        service = "ComosusClientAppSVC"
+    	service = "ComosusClientAppSVC"
 	}
 
 	stages {	
